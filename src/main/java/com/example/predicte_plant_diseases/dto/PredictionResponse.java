@@ -17,5 +17,6 @@ public class PredictionResponse {
     private String diseaseName;
     private Double confidence;
     private String imageUrl;
+    private String treatment;
     private LocalDateTime createdAt;
 }

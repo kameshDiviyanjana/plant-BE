@@ -6,6 +6,7 @@ import com.example.predicte_plant_diseases.entity.Prediction;
 import com.example.predicte_plant_diseases.entity.User;
 import com.example.predicte_plant_diseases.repository.PredictionRepository;
 import com.example.predicte_plant_diseases.repository.UserRepository;
+import com.example.predicte_plant_diseases.util.DiseaseTreatmentUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.client.RestTemplate;
@@ -54,12 +55,18 @@ public class PredictionServiceImpl implements PredictionService {
                     .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + request.getUserId()));
         }
 
+        String treatment = request.getTreatment();
+        if (treatment == null || treatment.trim().isEmpty()) {
+            treatment = DiseaseTreatmentUtil.getTreatment(request.getPlantName(), request.getDiseaseName());
+        }
+
         Prediction prediction = Prediction.builder()
                 .user(user)
                 .plantName(request.getPlantName())
                 .diseaseName(request.getDiseaseName())
                 .confidence(request.getConfidence())
                 .imageUrl(request.getImageUrl())
+                .treatment(treatment)
                 .build();
 
         Prediction saved = predictionRepository.save(prediction);
@@ -139,6 +146,7 @@ public class PredictionServiceImpl implements PredictionService {
                 .diseaseName(prediction.getDiseaseName())
                 .confidence(prediction.getConfidence())
                 .imageUrl(prediction.getImageUrl())
+                .treatment(prediction.getTreatment())
                 .createdAt(prediction.getCreatedAt())
                 .build();
     }

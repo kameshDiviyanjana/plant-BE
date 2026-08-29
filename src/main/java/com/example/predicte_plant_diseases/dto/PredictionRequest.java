@@ -15,4 +15,5 @@ public class PredictionRequest {
     private String diseaseName;
     private Double confidence;
     private String imageUrl;
+    private String treatment;
 }
