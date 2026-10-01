@@ -43,6 +43,11 @@ public class PredictionController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<List<PredictionResponse>> getAllPredictions() {
+        return ResponseEntity.ok(predictionService.getAllPredictions());
+    }
+
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> getPredictionsByUserId(@PathVariable Long userId) {
         try {
@@ -62,4 +67,15 @@ public class PredictionController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletePrediction(@PathVariable Long id) {
+        try {
+            predictionService.deletePrediction(id);
+            return ResponseEntity.ok("Prediction deleted successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 }
+

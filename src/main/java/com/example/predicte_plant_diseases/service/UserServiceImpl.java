@@ -133,4 +133,21 @@ public class UserServiceImpl implements UserService {
                 .createdAt(user.getCreatedAt())
                 .build();
     }
+
+    @Override
+    public java.util.List<AuthResponse.UserDetails> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(this::mapToUserDetails)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new IllegalArgumentException("User not found with id: " + id);
+        }
+        userRepository.deleteById(id);
+    }
 }
+

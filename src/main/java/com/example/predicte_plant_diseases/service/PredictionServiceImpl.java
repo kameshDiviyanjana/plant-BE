@@ -138,7 +138,24 @@ public class PredictionServiceImpl implements PredictionService {
         }
     }
 
+    @Override
+    public List<PredictionResponse> getAllPredictions() {
+        return predictionRepository.findAll(org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.DESC, "createdAt"))
+                .stream()
+                .map(this::mapToPredictionResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deletePrediction(Long id) {
+        if (!predictionRepository.existsById(id)) {
+            throw new IllegalArgumentException("Prediction not found with id: " + id);
+        }
+        predictionRepository.deleteById(id);
+    }
+
     private PredictionResponse mapToPredictionResponse(Prediction prediction) {
+
         return PredictionResponse.builder()
                 .id(prediction.getId())
                 .userId(prediction.getUser() != null ? prediction.getUser().getId() : null)
