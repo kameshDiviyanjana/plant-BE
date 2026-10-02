@@ -62,12 +62,13 @@ public class UserServiceImpl implements UserService {
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(hashedPassword)
+                .role("USER")
                 .build();
 
         User savedUser = userRepository.save(user);
 
-        String accessToken = jwtUtil.generateAccessToken(savedUser.getUsername(), savedUser.getId());
-        String refreshToken = jwtUtil.generateRefreshToken(savedUser.getUsername(), savedUser.getId());
+        String accessToken = jwtUtil.generateAccessToken(savedUser.getUsername(), savedUser.getId(), user.getRole());
+        String refreshToken = jwtUtil.generateRefreshToken(savedUser.getUsername(), savedUser.getId(), user.getRole());
 
         return AuthResponse.builder()
                 .success(true)
@@ -113,8 +114,10 @@ public class UserServiceImpl implements UserService {
                     .build();
         }
 
-        String accessToken = jwtUtil.generateAccessToken(user.getUsername(), user.getId());
-        String refreshToken = jwtUtil.generateRefreshToken(user.getUsername(), user.getId());
+        String accessToken = jwtUtil.generateAccessToken(user.getUsername(), user.getId(),user.getRole()
+        );
+        String refreshToken = jwtUtil.generateRefreshToken(user.getUsername(), user.getId(), user.getRole()
+        );
 
         return AuthResponse.builder()
                 .success(true)

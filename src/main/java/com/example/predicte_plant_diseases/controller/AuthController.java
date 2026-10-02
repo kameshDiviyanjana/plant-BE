@@ -52,9 +52,10 @@ public class AuthController {
             com.auth0.jwt.interfaces.DecodedJWT jwt = jwtUtil.verifyToken(refreshToken);
             String username = jwtUtil.getUsernameFromToken(jwt);
             Long userId = jwtUtil.getUserIdFromToken(jwt);
+            String role = jwtUtil.getRoleFromToken(jwt);
 
-            String newAccessToken = jwtUtil.generateAccessToken(username, userId);
-            String newRefreshToken = jwtUtil.generateRefreshToken(username, userId);
+            String newAccessToken = jwtUtil.generateAccessToken(username, userId, role);
+            String newRefreshToken = jwtUtil.generateRefreshToken(username, userId,role);
 
             return ResponseEntity.ok(AuthResponse.builder()
                     .success(true)

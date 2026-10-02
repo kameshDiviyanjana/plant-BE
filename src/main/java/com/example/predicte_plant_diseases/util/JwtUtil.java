@@ -16,18 +16,20 @@ public class JwtUtil {
     private static final long ACCESS_TOKEN_EXPIRATION = 15 * 60 * 1000; // 15 minutes
     private static final long REFRESH_TOKEN_EXPIRATION = 7 * 24 * 60 * 60 * 1000; // 7 days
 
-    public String generateAccessToken(String username, Long userId) {
+    public String generateAccessToken(String username, Long userId, String role) {
         return JWT.create()
                 .withSubject(username)
                 .withClaim("userId", userId)
+                .withClaim("role", role)
                 .withExpiresAt(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
                 .sign(algorithm);
     }
 
-    public String generateRefreshToken(String username, Long userId) {
+    public String generateRefreshToken(String username, Long userId, String role) {
         return JWT.create()
                 .withSubject(username)
                 .withClaim("userId", userId)
+                .withClaim("role",role)
                 .withExpiresAt(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
                 .sign(algorithm);
     }
@@ -43,5 +45,9 @@ public class JwtUtil {
 
     public Long getUserIdFromToken(DecodedJWT jwt) {
         return jwt.getClaim("userId").asLong();
+    }
+
+    public String getRoleFromToken(DecodedJWT jwt) {
+        return jwt.getClaim("role").asString();
     }
 }
